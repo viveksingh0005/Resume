@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-// import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 const Login = () => {
-    // const { loading, handleLogin } = useAuth();
+    const {  handleLogin } = useAuth();
     const navigate = useNavigate()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -28,7 +28,7 @@ const Login = () => {
                         <div className="flex flex-col">
                             <label className="text-gray-300">Email</label>
                             <input onChange={(e) => { setEmail(e.target.value) }} type="email"
-                                placeholder="Enter emai"
+                                placeholder="Enter email"
                                 className="px-3 py-2 rounded-lg bg-gray-700 text-white outline-none focus:ring-2 focus:ring-blue-500">
 
                             </input>

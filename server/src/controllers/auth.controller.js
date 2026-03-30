@@ -1,7 +1,7 @@
 const userModel = require("../models/user.model")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
-const tokenBlacklistmodel= require("../modes/blackli.model")
+const tokenBlacklistModel= require("../models/blacklist.model")
 
 async function registerUserController(req,res){
     const {username,email,password}=req.body
@@ -16,7 +16,7 @@ async function registerUserController(req,res){
     })
     if(isUserAlreadyExists){
         return res.status(400).json({
-            essage:"Account already exists with this email address or username"
+            message:"Account already exists with this email address or username"
         })
     }
     const hash = await bcrypt.hash(password,10)
@@ -28,7 +28,7 @@ async function registerUserController(req,res){
     const token = jwt.sign({
         id:user._id,username:user.username
     },
-    process.env.JWT_SECRET,{expoires:"1d"}
+    process.env.JWT_SECRET,{expiresIn:"1d"}
 )
 res.cookie ("token",token)
 

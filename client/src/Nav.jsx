@@ -31,7 +31,7 @@ export default function Nav() {
               Login
             </button>
           </NavLink>
-          <NavLink to="/signup">
+          <NavLink to="/register">
             <button className="px-4 py-2 rounded-full bg-black text-white text-sm hover:bg-gray-800 transition">
               Signup
             </button>

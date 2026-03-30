@@ -40,3 +40,17 @@ export async function logout(){
         console.log(err)
     }
 }
+
+export async function getMe() {
+
+    try {
+
+        const response = await api.get("/api/auth/get-me")
+
+        return response.data
+
+    } catch (err) {
+        console.log(err)
+    }
+
+}
