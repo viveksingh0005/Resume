@@ -81,7 +81,7 @@ function LeftPanel({
   const sec = (title, children) => (
     <div style={{ padding: "11px 12px 10px", borderBottom: "1px solid #2d3748" }}>
       <p style={{
-        fontSize: 12, fontWeight: 700, letterSpacing: "2px",
+        fontSize: 14, fontWeight: 700, letterSpacing: "2px",
         textTransform: "uppercase", color: "#64748b", marginBottom: 9
       }}>
         {title}
@@ -91,157 +91,143 @@ function LeftPanel({
   );
 
   return (
-    <div style={{
-      width: 220, minWidth: 220, background: "#1a1f2e",
-      borderRight: "1px solid #2d3748", overflowY: "auto",
-      fontFamily: "'Segoe UI',sans-serif"
-    }}>
-      {/* Logo */}
-      <div style={{
-        padding: "13px 12px", borderBottom: "1px solid #2d3748",
-        display: "flex", gap: 9, alignItems: "center"
-      }}>
-        <div style={{
-          width: 28, height: 28, background: "#185fa5", borderRadius: 6,
-          display: "flex", alignItems: "center", justifyContent: "center",
-          fontWeight: 800, fontSize: 15, color: "#fff", flexShrink: 0
-        }}>
-          R
-        </div>
-        <div>
-          <p style={{ fontSize: 13, fontWeight: 700, color: "#e2e8f0" }}>Resume Builder</p>
-          <p style={{ fontSize: 10, color: "#34d399", letterSpacing: 1 }}>ATS FRIENDLY</p>
-        </div>
+  <div className="w-105 min-w-105 h-screen bg-[#1a1f2e] border-r border-[#2d3748] overflow-y-auto font-sans flex flex-col">
+
+    {/* Logo Header */}
+    <div className="px-4 py-4 border-b border-[#2d3748] flex items-center gap-3">
+      <div className="w-9 h-9 bg-[#185fa5] rounded-xl flex items-center justify-center text-white font-black text-xl flex-shrink-0 shadow-md">
+        R
       </div>
-
-      {/* Templates button */}
-      <div style={{ padding: "10px 12px", borderBottom: "1px solid #2d3748" }}>
-        <button
-          onClick={onShowGallery}
-          style={{
-            width: "100%", padding: "8px", background: "rgba(24,95,165,0.15)",
-            border: "1px solid #185fa5", borderRadius: 6, color: "#60a5fa",
-            fontSize: 12, fontWeight: 700, cursor: "pointer",
-            fontFamily: "'Segoe UI',sans-serif"
-          }}>
-          🎨 Choose Template
-        </button>
+      <div>
+        <p className="text-white font-semibold text-[15px]">Resume Builder</p>
+        <p className="text-[#34d399] text-xs tracking-[1px] font-medium">ATS FRIENDLY</p>
       </div>
-
-      {/* Add Block */}
-      {sec("Add Block",
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          {BLOCK_TYPES.map(bt => (
-            <button key={bt.type}
-              onClick={() => bt.type === "link" ? onShowLinkModal() : onAddBlock(bt.type)}
-              style={{
-                display: "flex", alignItems: "center", gap: 8,
-                background: "transparent", border: "1px solid #2d3748",
-                borderRadius: 6, padding: "6px 9px", cursor: "pointer",
-                color: "#e2e8f0", fontSize: 12, textAlign: "left"
-              }}>
-              <span style={{ width: 16, textAlign: "center", fontWeight: 700 }}>{bt.icon}</span>
-              {bt.label}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {/* Font */}
-      {sec("Font",
-        <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-          {FONTS.map(f => (
-            <button key={f.name} onClick={() => setFont(f)}
-              style={{
-                display: "flex", alignItems: "center", justifyContent: "space-between",
-                background: font.name === f.name ? "rgba(24,95,165,0.2)" : "transparent",
-                border: `1px solid ${font.name === f.name ? "#185fa5" : "#2d3748"}`,
-                borderRadius: 6, padding: "6px 9px", cursor: "pointer",
-                color: "#e2e8f0", fontFamily: f.val, fontSize: 12
-              }}>
-              {f.name}
-              <span style={{
-                fontSize: 9, background: "rgba(52,211,153,0.15)", color: "#34d399",
-                padding: "2px 5px", borderRadius: 3, fontWeight: 700,
-                fontFamily: "'Segoe UI',sans-serif"
-              }}>
-                {f.tag}
-              </span>
-            </button>
-          ))}
-        </div>
-      )}
-
-      {/* Font Size */}
-      {sec("Font Size",
-        <div>
-          {[
-            ["Name",    sizes.name,    18, 34, "name"],
-            ["Heading", sizes.heading, 10, 16, "heading"],
-            ["Body",    sizes.body,     9, 13, "body"],
-          ].map(([lbl, val, mn, mx, key]) => (
-            <div key={key} style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 7 }}>
-              <span style={{ fontSize: 11, color: "#94a3b8", width: 55, flexShrink: 0 }}>{lbl}</span>
-              <input type="range" min={mn} max={mx} value={val}
-                onChange={e => setSizes(s => ({ ...s, [key]: Number(e.target.value) }))}
-                style={{ flex: 1, accentColor: "#185fa5" }}
-              />
-              <span style={{ fontSize: 11, width: 22, textAlign: "right", color: "#e2e8f0" }}>{val}</span>
-            </div>
-          ))}
-          <p style={{ fontSize: 10, color: "#475569" }}>ATS recommended: Body 10–12pt</p>
-        </div>
-      )}
-
-      {/* Accent Color */}
-      {sec("Accent Color",
-        <div>
-          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 9 }}>
-            {ACCENT_COLORS.map(c => (
-              <div key={c} onClick={() => setAccentColor(c)}
-                style={{
-                  width: 22, height: 22, borderRadius: "50%", background: c,
-                  cursor: "pointer",
-                  border: accentColor === c ? "2.5px solid #e2e8f0" : "2px solid transparent",
-                  transform: accentColor === c ? "scale(1.2)" : "scale(1)",
-                  transition: "transform .1s"
-                }}
-              />
-            ))}
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-            <span style={{ fontSize: 11, color: "#94a3b8" }}>Custom:</span>
-            <input type="color" value={accentColor} onChange={e => setAccentColor(e.target.value)}
-              style={{ width: 30, height: 22, border: "none", background: "none", cursor: "pointer", padding: 0 }}
-            />
-            <span style={{ fontSize: 11, color: "#64748b" }}>{accentColor}</span>
-          </div>
-        </div>
-      )}
-
-      {/* Page Size */}
-      {sec("Page Size",
-        <div>
-          <div style={{ display: "flex", gap: 6 }}>
-            {PAGE_SIZES.map(s => (
-              <button key={s.label} onClick={() => setPageSize(s)}
-                style={{
-                  padding: "4px 12px", borderRadius: 20, cursor: "pointer",
-                  fontSize: 12, fontFamily: "inherit",
-                  border: `1px solid ${pageSize.label === s.label ? "#185fa5" : "#2d3748"}`,
-                  background: pageSize.label === s.label ? "rgba(24,95,165,0.2)" : "transparent",
-                  color: pageSize.label === s.label ? "#60a5fa" : "#e2e8f0",
-                  fontWeight: pageSize.label === s.label ? 700 : 400
-                }}>
-                {s.label}
-              </button>
-            ))}
-          </div>
-          <p style={{ fontSize: 10, color: "#475569", marginTop: 7 }}>A4 & Letter most ATS-safe</p>
-        </div>
-      )}
     </div>
-  );
+
+    {/* Choose Template Button */}
+    <div className="px-4 py-4 border-b border-[#2d3748]">
+      <button
+        onClick={onShowGallery}
+        className="w-full py-3 px-4 bg-[#185fa5]/10 hover:bg-[#185fa5]/20 border border-[#185fa5] rounded-xl text-[#60a5fa] font-semibold text-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+      >
+        🎨 Choose Template
+      </button>
+    </div>
+
+    {/* Sections */}
+    {sec("Add Block",
+      <div className="flex flex-col gap-2">
+        {BLOCK_TYPES.map(bt => (
+          <button
+            key={bt.type}
+            onClick={() => bt.type === "link" ? onShowLinkModal() : onAddBlock(bt.type)}
+            className="flex items-center gap-3 px-4 py-3 bg-transparent hover:bg-white/5 border border-[#2d3748] hover:border-[#3b4a66] rounded-xl text-[#e2e8f0] text-14px transition-all active:scale-[0.98] text-left"
+          >
+            <span className="w-5 text-center font-bold text-base">{bt.icon}</span>
+            <span>{bt.label}</span>
+          </button>
+        ))}
+      </div>
+    )}
+
+    {sec("Font",
+      <div className="flex flex-col gap-2">
+        {FONTS.map(f => (
+          <button
+            key={f.name}
+            onClick={() => setFont(f)}
+            className={`flex items-center justify-between px-4 py-2 rounded-xl border transition-all text-14px
+              ${font.name === f.name 
+                ? 'bg-[#185fa5]/20 border-[#185fa5]  text-white' 
+                : 'bg-transparent border-[#2d3748] hover:bg-white/5 hover:border-[#3b4a66]  text-[#e2e8f0]'
+              }`}
+            style={{ fontFamily: f.val }}
+          >
+            <span>{f.name}</span>
+            <span className="text-14px px-2 py-1 bg-[#003f28] text-[#11ffa8] font-bold rounded-md tracking-wider">
+              {f.tag}
+            </span>
+          </button>
+        ))}
+      </div>
+    )}
+
+    {sec("Font Size",
+      <div className="space-y-5">
+        {[
+          ["Name",    sizes.name,    18, 34, "name"],
+          ["Heading", sizes.heading, 10, 16, "heading"],
+          ["Body",    sizes.body,     9, 13, "body"],
+        ].map(([lbl, val, mn, mx, key]) => (
+          <div key={key} className="flex items-center gap-4">
+            <span className="text-xs text-[#94a3b8] w-14 flex-shrink-0 font-medium">{lbl}</span>
+            
+            <input 
+              type="range" 
+              min={mn} 
+              max={mx} 
+              value={val}
+              onChange={e => setSizes(s => ({ ...s, [key]: Number(e.target.value) }))}
+              className="flex-1 accent-[#185fa5]"
+            />
+            
+            <span className="text-sm font-medium text-white w-8 text-right">{val}</span>
+          </div>
+        ))}
+        <p className="text-[10px] text-[#475569] pl-1">ATS recommended: Body 10–12pt</p>
+      </div>
+    )}
+
+    {sec("Accent Color",
+      <div>
+        <div className="flex flex-wrap gap-3 mb-4">
+          {ACCENT_COLORS.map(c => (
+            <div
+              key={c}
+              onClick={() => setAccentColor(c)}
+              className={`w-8 h-8 rounded-full cursor-pointer ring-2 ring-offset-2 ring-offset-[#1a1f2e] transition-all hover:scale-110
+                ${accentColor === c ? 'ring-[#e2e8f0] scale-110' : 'ring-transparent'}`}
+              style={{ backgroundColor: c }}
+            />
+          ))}
+        </div>
+
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-[#94a3b8]">Custom</span>
+          <input 
+            type="color" 
+            value={accentColor} 
+            onChange={e => setAccentColor(e.target.value)}
+            className="w-9 h-8 bg-transparent border-0 p-0 cursor-pointer rounded"
+          />
+          <span className="text-xs font-mono text-[#64748b]">{accentColor}</span>
+        </div>
+      </div>
+    )}
+
+    {sec("Page Size",
+      <div>
+        <div className="flex gap-2 flex-wrap">
+          {PAGE_SIZES.map(s => (
+            <button
+              key={s.label}
+              onClick={() => setPageSize(s)}
+              className={`px-5 py-2 text-sm font-medium rounded-full border transition-all
+                ${pageSize.label === s.label 
+                  ? 'bg-[#185fa5]/20 border-[#185fa5] text-[#60a5fa]' 
+                  : 'border-[#2d3748] hover:border-[#3b4a66] text-[#e2e8f0]'
+                }`}
+            >
+              {s.label}
+            </button>
+          ))}
+        </div>
+        <p className="text-[10px] text-[#475569] mt-3 pl-1">A4 & Letter most ATS-safe</p>
+      </div>
+    )}
+
+  </div>
+);
 }
 
 

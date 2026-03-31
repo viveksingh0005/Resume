@@ -15,12 +15,28 @@ export default function Nav() {
 
         {/* Desktop Menu */}
         <ul className="hidden md:flex items-center gap-8 text-gray-700 font-medium">
-          {['Home', 'Explore', 'Services', 'About', 'Contact'].map((item) => (
-            <li key={item} className="relative group cursor-pointer">
-              {item}
+         
+            <li  className="relative group cursor-pointer">
+              Home
+            
               <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-black transition-all duration-300 group-hover:w-full"></span>
             </li>
-          ))}
+            <li  className="relative group cursor-pointer">
+             Services
+            
+              <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-black transition-all duration-300 group-hover:w-full"></span>
+            </li>
+            <li  className="relative group cursor-pointer">
+              About
+            
+              <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-black transition-all duration-300 group-hover:w-full"></span>
+            </li>
+            <li  className="relative group cursor-pointer">
+              Contact
+            
+              <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-black transition-all duration-300 group-hover:w-full"></span>
+            </li>
+         
         </ul>
 
         {/* Right Actions */}
@@ -64,10 +80,16 @@ export default function Nav() {
               <User size={20} />
             </button>
           </div>
-
+<NavLink to="/login">
           <button className="w-full mt-3 py-2 rounded-full bg-black text-white hover:bg-gray-800 transition">
             Login
           </button>
+          </NavLink>
+<NavLink to="/register">
+          <button className="w-full mt-3 py-2 rounded-full bg-black text-white hover:bg-gray-800 transition">
+            Register
+          </button>
+          </NavLink>
         </div>
       )}
     </nav>
