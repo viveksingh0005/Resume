@@ -1,12 +1,16 @@
-import React from 'react'
+import {useState} from 'react'
 import NavBar from './Nav'
 import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
 import Footer from './Footer';
+import FeedbackModal from './webpages/FeedbackModal';
 export const Home = () => {
+  const [showModal, setShowModal] = useState(false);
+  
   return (
     <>
       <NavBar />
+      
       <section className="relative w-full min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-gray-50 to-gray-100 overflow-hidden">
         {/* Background Glow */}
         <div className="absolute top-[-100px] left-[-100px] w-[300px] h-[300px] bg-purple-300 opacity-30 rounded-full blur-3xl"></div>
@@ -38,6 +42,18 @@ export const Home = () => {
               <button className="px-6 py-3 rounded-full border border-gray-300 hover:bg-gray-100 transition">
                 View Templates
               </button>
+             <button
+        onClick={() => setShowModal(true)}
+        className="fixed bottom-8 right-8 bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 rounded-3xl shadow-2xl flex items-center gap-3 text-lg font-semibold transition-all hover:scale-105 z-50"
+      >
+        ⭐ Give Feedback
+      </button>
+
+      {/* Feedback Modal - Will appear when button is clicked */}
+      <FeedbackModal 
+        isOpen={showModal} 
+        onClose={() => setShowModal(false)} 
+      />
             </div>
           </motion.div>
 
@@ -119,6 +135,7 @@ export const Home = () => {
           </div>
         </div>
       </section>
+   
       <Footer/>
     </>
   )

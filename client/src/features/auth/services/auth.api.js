@@ -4,7 +4,7 @@ const api = axios.create({
     baseURL:"http://localhost:3000",
     withCredentials:true
 })
-
+export default api
 export async function register({
     username,email,password
 }){
@@ -19,25 +19,31 @@ export async function register({
     }
 }
 
-export async function login({email,password}){
+export async function loginapi({email,password}){
     try{
         const response = await api.post("/api/auth/login",{
             email,password
+            
         })
+         
         return response.data
+        
+
     }
     catch(err){
         console.log(err)
     }
 }
 
-export async function logout(){
-    try{
-        const response = await api.get("/api/auth/logout")
-        return response.data
-    }
-    catch (err){
-        console.log(err)
+// auth.api.js
+export async function logout() {
+    try {
+        const response = await api.post("/api/auth/logout", {}, {
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        });
+        return response.data;
+    } catch (err) {
+        console.log(err);
     }
 }
 

@@ -6,6 +6,8 @@ const Login = () => {
     const navigate = useNavigate()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+
+    
     const handleSubmit = async (e) => {
         e.preventDefault()
         const result = await handleLogin({
@@ -13,6 +15,7 @@ const Login = () => {
         })
         if (result?.success) {
             navigate('/')
+            
         }
         else {
             alert(result?.message || "email or password is not true")
