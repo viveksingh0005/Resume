@@ -1,43 +1,53 @@
-const jwt = require("jsonwebtoken")
-const tokenBlacklistModel = require("../models/blacklist.model")
-
-
+const jwt = require("jsonwebtoken");
+const tokenBlacklistModel = require("../models/blacklist.model");
 
 async function authUser(req, res, next) {
-
-    const token = req.cookies.token
-
-    if (!token) {
-        return res.status(401).json({
-            message: "Token not provided."
-        })
-    }
-
-    const isTokenBlacklisted = await tokenBlacklistModel.findOne({
-        token
-    })
-
-    if (isTokenBlacklisted) {
-        return res.status(401).json({
-            message: "token is invalid"
-        })
-    }
-
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        // ✅ Read token from Authorization header
+        const authHeader = req.headers.authorization;
 
-        req.user = decoded
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            return res.status(401).json({
+                message: "Token not provided."
+            });
+        }
 
-        next()
+        const token = authHeader.split(" ")[1];
+
+        // ✅ Check if token is blacklisted (logged out)
+        const isTokenBlacklisted = await tokenBlacklistModel.findOne({ token });
+
+        if (isTokenBlacklisted) {
+            return res.status(401).json({
+                message: "Token is invalid. Please login again."
+            });
+        }
+
+        // ✅ Verify token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        // ✅ Attach user to request
+        req.user = decoded;
+
+        next();
 
     } catch (err) {
-
+        // ✅ Handle specific JWT errors
+        if (err.name === "TokenExpiredError") {
+            return res.status(401).json({
+                message: "Token has expired. Please login again."
+            });
+        }
+        if (err.name === "JsonWebTokenError") {
+            return res.status(401).json({
+                message: "Invalid token. Please login again."
+            });
+        }
         return res.status(401).json({
-            message: "Invalid token."
-        })
+            message: "Authentication failed."
+        });
     }
-
 }
 
+module.exports = { authUser };
 
-module.exports = { authUser }

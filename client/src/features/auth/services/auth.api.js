@@ -15,6 +15,7 @@ export async function register({
         return response.data
     }
     catch(err){
+        console.log("Register error:", err.response?.data);
         console.log(err)
     }
 }

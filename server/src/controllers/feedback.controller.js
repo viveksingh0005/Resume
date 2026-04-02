@@ -13,13 +13,13 @@ const submitFeedback = async (req, res) => {
     }
 
     const feedback = await Feedback.create({
-      user: req.user._id,   // Comes from protect middleware
+      user: req.user.id,   // Comes from protect middleware
       rating,
       comment
     });
 
     // Populate user name before sending response
-    await feedback.populate('user', 'name email');
+    await feedback.populate('user', 'username email');
 
     res.status(201).json({
       success: true,
@@ -47,7 +47,7 @@ const getAllFeedbacks = async (req, res) => {
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
-      .populate('user', 'name email')
+      .populate('user', 'username email')
       .lean();
 
     const total = await Feedback.countDocuments();

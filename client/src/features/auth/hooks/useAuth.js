@@ -30,7 +30,8 @@ export const useAuth=()=>{
     const handleRegister = async({username,email,password})=>{
         try{
             const data= await register({username,email,password})
-             login(data.user,data.token)
+            
+            
         }
         catch(err){
             console.log("Error:",err)

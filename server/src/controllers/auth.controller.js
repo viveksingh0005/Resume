@@ -97,7 +97,7 @@ async function registerUserController(req,res){
     }
     const isUserAlreadyExists = await
     userModel.findOne({
-        $or:[{username},{email}]
+        $or:[{email}]
     })
     if(isUserAlreadyExists){
         return res.status(400).json({
