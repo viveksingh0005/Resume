@@ -7,87 +7,70 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Google Login Controller
 const googleLoginController = async (req, res) => {
-  const { token } = req.body;   // This is the credential (ID token) from @react-oauth/google
+    const { token } = req.body;
 
-  if (!token) {
-    return res.status(400).json({ 
-      success: false, 
-      message: 'Token is required' 
-    });
-  }
-
-  try {
-    const ticket = await client.verifyIdToken({
-      idToken: token,
-      audience: process.env.GOOGLE_CLIENT_ID,   // Must match your web client ID
-    });
-
-    const payload = ticket.getPayload();
-    if (!payload) {
-      return res.status(401).json({ 
-        success: false, 
-        message: 'Invalid token payload' 
-      });
+    if (!token) {
+        return res.status(400).json({ success: false, message: 'Token is required' });
     }
 
-    const { sub: googleId, email, name, picture } = payload;
+    try {
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
 
-    // Find existing user or create new one
-    let user = await userModel.findOne({ googleId });
+        const payload = ticket.getPayload();
+        if (!payload) {
+            return res.status(401).json({ success: false, message: 'Invalid token payload' });
+        }
 
-    if (!user) {
-    user = await userModel.create({
-        googleId,
-        email,
-        name: name || email.split('@')[0],   // fallback name
-        picture,
-        isGoogleUser: true,
-        // username and password will be null/undefined → allowed now
-    });
-}
+        const { sub: googleId, email, name, picture } = payload;
 
-    // Generate your own JWT
-    const jwtToken = jwt.sign(
-      { 
-        userId: user._id, 
-        email: user.email,
-        // You can add role or other claims here
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: '7d' }
-    );
+        let user = await userModel.findOne({ googleId });
 
-    res.status(200).json({
-      success: true,
-      token: jwtToken,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        picture: user.picture
-      }
-    });
+        if (!user) {
+            user = await userModel.create({
+                googleId,
+                email,
+                name: name || email.split('@')[0],
+                picture,
+                isGoogleUser: true,
+            });
+        }
 
-  } catch (error) {
-    console.error("FULL ERROR:", error.message); // ← Check your terminal RIGHT NOW
-  res.status(500).json({ message: error.message });
-    console.error('Google auth error:', error.message);
+        const jwtToken = jwt.sign(
+            { id: user._id, email: user.email }, // ← changed userId to id to match your middleware
+            process.env.JWT_SECRET,
+            { expiresIn: '7d' }
+        );
 
-    // Common errors: audience mismatch, expired token, invalid signature
-    if (error.message.includes('audience') || error.message.includes('Invalid token')) {
-      return res.status(401).json({ 
-        success: false, 
-        message: 'Invalid Google token - audience mismatch or token expired' 
-      });
+        return res.status(200).json({
+            success: true,
+            token: jwtToken,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                picture: user.picture
+            }
+        });
+
+    } catch (error) {
+        console.error('Google auth error:', error.message);
+
+        if (error.message.includes('audience') || error.message.includes('Invalid token')) {
+            return res.status(401).json({ 
+                success: false, 
+                message: 'Invalid Google token' 
+            });
+        }
+
+        return res.status(500).json({ 
+            success: false, 
+            message: 'Something went wrong during Google sign in' 
+        });
     }
-
-    res.status(500).json({ 
-      success: false, 
-      message: 'Something went wrong during Google sign in' 
-    });
-  }
 };
-
 async function registerUserController(req,res){
     const {username,email,password}=req.body
     if(!username||!email||!password){

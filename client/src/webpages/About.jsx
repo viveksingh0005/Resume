@@ -1,6 +1,7 @@
 import React from 'react';
 import { Users, Award, Heart, Coffee } from 'lucide-react';
 
+
 const About = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 text-white overflow-hidden">
@@ -26,10 +27,7 @@ const About = () => {
           </p>
 
           <div className="flex items-center justify-center gap-4">
-            <button className="px-8 py-4 bg-white text-black font-semibold rounded-2xl hover:bg-purple-500 hover:text-white transition-all duration-300 flex items-center gap-3 group">
-              Meet Our Team
-              <span className="group-hover:rotate-12 transition-transform">👋</span>
-            </button>
+         
             <button className="px-8 py-4 border border-white/30 hover:border-white/60 rounded-2xl font-medium transition-all duration-300">
               Our Journey
             </button>
@@ -92,7 +90,7 @@ const About = () => {
                   <Heart className="w-7 h-7" />
                 </div>
                 <div>
-                  <div className="font-semibold text-lg">Built with passion</div>
+                  <div className="font-semibold text-lg"> passion</div>
                   <div className="text-sm text-gray-400">Every pixel tells a story</div>
                 </div>
               </div>
@@ -145,46 +143,10 @@ const About = () => {
       </div>
 
       {/* Team Highlight */}
-      <div className="py-24 px-6 max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-5xl font-bold mb-4">Meet The Minds Behind</h2>
-          <p className="text-gray-400 text-xl">The people who make magic happen</p>
-        </div>
-
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {[
-            { name: "Priya Sharma", role: "Founder & Creative Director", img: "https://picsum.photos/id/64/400/400" },
-            { name: "Arjun Patel", role: "Lead Developer", img: "https://picsum.photos/id/201/400/400" },
-            { name: "Neha Kapoor", role: "UI/UX Designer", img: "https://picsum.photos/id/65/400/400" },
-          ].map((member, i) => (
-            <div key={i} className="group relative overflow-hidden rounded-3xl aspect-[4/3] bg-zinc-900">
-              <img 
-                src={member.img} 
-                alt={member.name}
-                className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
-              />
-              <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/90 via-black/70 to-transparent"></div>
-              
-              <div className="absolute bottom-8 left-8 right-8">
-                <h3 className="text-2xl font-semibold mb-1">{member.name}</h3>
-                <p className="text-purple-400 font-medium">{member.role}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+     
 
       {/* Final CTA */}
-      <div className="border-t border-white/10 py-24 px-6 text-center">
-        <div className="max-w-2xl mx-auto">
-          <h2 className="text-5xl font-bold mb-6">Ready to create something<br />extraordinary together?</h2>
-          <p className="text-gray-400 text-lg mb-10">Let's turn your vision into reality.</p>
-          
-          <button className="px-10 py-5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl font-semibold text-lg hover:scale-105 active:scale-95 transition-all duration-300 shadow-xl shadow-purple-500/30">
-            Start a Project
-          </button>
-        </div>
-      </div>
+     
     </div>
   );
 };

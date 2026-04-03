@@ -101,12 +101,12 @@ const Service = () => {
       <div className="bg-black/60 py-24 px-6">
         <div className="max-w-4xl mx-auto text-center">
           <div className="inline-block bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30 px-8 py-2 rounded-full mb-8">
-            Starting at just ₹999
+            Start getting more opportunities with better resume
           </div>
 
           <h2 className="text-5xl font-bold mb-6">Ready to Land Your Dream Job?</h2>
           <p className="text-gray-400 text-xl mb-12 max-w-xl mx-auto">
-            Join hundreds of professionals who transformed their careers with our premium resume service.
+            Join hundreds of professionals who transformed their careers with our amazing resume service.
           </p>
 
           <button

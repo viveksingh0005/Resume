@@ -1,5 +1,5 @@
 // src/components/ATSResumeBuilder.jsx
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { exportToPDF } from "../utils/exportPDF";
 import Block from "../components/Block";
@@ -8,14 +8,15 @@ import {
   BLOCK_TYPES, DEFAULT_TEXT, uid
 } from "../utils/constants";
 import { TEMPLATES, getTemplateById } from "../templates";
-import TemplateGallery from "../components/TemplateGallery";
-import SingleColumn    from "../renderes/SingleColumn";
-import TwoColumn       from "../renderes/TwoColumn";
+import TemplatePage from "./TemplatePage";
+import SingleColumn from "../renderes/SingleColumn";
+import TwoColumn from "../renderes/TwoColumn";
+
 
 // ── Link Modal ─────────────────────────────────────────
 function LinkModal({ onAdd, onClose }) {
   const [text, setText] = useState("");
-  const [url,  setUrl]  = useState("https://");
+  const [url, setUrl] = useState("https://");
 
   const inp = {
     width: "100%", padding: "8px 10px", background: "#0f1117",
@@ -77,6 +78,7 @@ function LeftPanel({
   pageSize, setPageSize,
   onAddBlock, onShowLinkModal,
   onShowGallery,
+
 }) {
   const sec = (title, children) => (
     <div style={{ padding: "11px 12px 10px", borderBottom: "1px solid #2d3748" }}>
@@ -89,205 +91,219 @@ function LeftPanel({
       {children}
     </div>
   );
-
+  const navigate = useNavigate();
   return (
-  <div className="w-105 min-w-105 h-screen bg-[#1a1f2e] border-r border-[#2d3748] overflow-y-auto font-sans flex flex-col">
+    <div className="w-105 min-w-105 h-screen bg-[#1a1f2e] border-r border-[#2d3748] overflow-y-auto font-sans flex flex-col">
 
-    {/* Logo Header */}
-    <div className="px-4 py-4 border-b border-[#2d3748] flex items-center gap-3">
-      <div className="w-9 h-9 bg-[#185fa5] rounded-xl flex items-center justify-center text-white font-black text-xl flex-shrink-0 shadow-md">
-        R
-      </div>
-      <div>
-        <p className="text-white font-semibold text-[15px]">Resume Builder</p>
-        <p className="text-[#34d399] text-xs tracking-[1px] font-medium">ATS FRIENDLY</p>
-      </div>
-    </div>
-
-    {/* Choose Template Button */}
-    <div className="px-4 py-4 border-b border-[#2d3748]">
-      <button
-        onClick={onShowGallery}
-        className="w-full py-3 px-4 bg-[#185fa5]/10 hover:bg-[#185fa5]/20 border border-[#185fa5] rounded-xl text-[#60a5fa] font-semibold text-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
-      >
-        🎨 Choose Template
-      </button>
-    </div>
-
-    {/* Sections */}
-    {sec("Add Block",
-      <div className="flex flex-col gap-2">
-        {BLOCK_TYPES.map(bt => (
-          <button
-            key={bt.type}
-            onClick={() => bt.type === "link" ? onShowLinkModal() : onAddBlock(bt.type)}
-            className="flex items-center gap-3 px-4 py-3 bg-transparent hover:bg-white/5 border border-[#2d3748] hover:border-[#3b4a66] rounded-xl text-[#e2e8f0] text-14px transition-all active:scale-[0.98] text-left"
-          >
-            <span className="w-5 text-center font-bold text-base">{bt.icon}</span>
-            <span>{bt.label}</span>
-          </button>
-        ))}
-      </div>
-    )}
-
-    {sec("Font",
-      <div className="flex flex-col gap-2">
-        {FONTS.map(f => (
-          <button
-            key={f.name}
-            onClick={() => setFont(f)}
-            className={`flex items-center justify-between px-4 py-2 rounded-xl border transition-all text-14px
-              ${font.name === f.name 
-                ? 'bg-[#185fa5]/20 border-[#185fa5]  text-white' 
-                : 'bg-transparent border-[#2d3748] hover:bg-white/5 hover:border-[#3b4a66]  text-[#e2e8f0]'
-              }`}
-            style={{ fontFamily: f.val }}
-          >
-            <span>{f.name}</span>
-            <span className="text-14px px-2 py-1 bg-[#003f28] text-[#11ffa8] font-bold rounded-md tracking-wider">
-              {f.tag}
-            </span>
-          </button>
-        ))}
-      </div>
-    )}
-
-    {sec("Font Size",
-      <div className="space-y-5">
-        {[
-          ["Name",    sizes.name,    18, 34, "name"],
-          ["Heading", sizes.heading, 10, 16, "heading"],
-          ["Body",    sizes.body,     9, 13, "body"],
-        ].map(([lbl, val, mn, mx, key]) => (
-          <div key={key} className="flex items-center gap-4">
-            <span className="text-xs text-[#94a3b8] w-14 flex-shrink-0 font-medium">{lbl}</span>
-            
-            <input 
-              type="range" 
-              min={mn} 
-              max={mx} 
-              value={val}
-              onChange={e => setSizes(s => ({ ...s, [key]: Number(e.target.value) }))}
-              className="flex-1 accent-[#185fa5]"
-            />
-            
-            <span className="text-sm font-medium text-white w-8 text-right">{val}</span>
-          </div>
-        ))}
-        <p className="text-[10px] text-[#475569] pl-1">ATS recommended: Body 10–12pt</p>
-      </div>
-    )}
-
-    {sec("Accent Color",
-      <div>
-        <div className="flex flex-wrap gap-3 mb-4">
-          {ACCENT_COLORS.map(c => (
-            <div
-              key={c}
-              onClick={() => setAccentColor(c)}
-              className={`w-8 h-8 rounded-full cursor-pointer ring-2 ring-offset-2 ring-offset-[#1a1f2e] transition-all hover:scale-110
-                ${accentColor === c ? 'ring-[#e2e8f0] scale-110' : 'ring-transparent'}`}
-              style={{ backgroundColor: c }}
-            />
-          ))}
+      {/* Logo Header */}
+      <div className="px-4 py-4 border-b border-[#2d3748] flex items-center gap-3">
+        <div className="w-9 h-9 bg-[#185fa5] rounded-xl flex items-center justify-center text-white font-black text-xl flex-shrink-0 shadow-md">
+          R
         </div>
-
-        <div className="flex items-center gap-3">
-          <span className="text-xs text-[#94a3b8]">Custom</span>
-          <input 
-            type="color" 
-            value={accentColor} 
-            onChange={e => setAccentColor(e.target.value)}
-            className="w-9 h-8 bg-transparent border-0 p-0 cursor-pointer rounded"
-          />
-          <span className="text-xs font-mono text-[#64748b]">{accentColor}</span>
+        <div>
+          <p className="text-white font-semibold text-[15px]">Resume Builder</p>
+          <p className="text-[#34d399] text-xs tracking-[1px] font-medium">ATS FRIENDLY</p>
         </div>
       </div>
-    )}
 
-    {sec("Page Size",
-      <div>
-        <div className="flex gap-2 flex-wrap">
-          {PAGE_SIZES.map(s => (
+      {/* Choose Template Button */}
+      <div className="px-4 py-4 border-b border-[#2d3748]">
+        <button
+          onClick={() => navigate('/templates')}
+          className="w-full py-3 px-4 bg-[#185fa5]/10 hover:bg-[#185fa5]/20 border border-[#185fa5] rounded-xl text-[#60a5fa] font-semibold text-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+        >
+          🎨 Choose Template
+        </button>
+      </div>
+
+      {/* Sections */}
+      {sec("Add Block",
+        <div className="flex flex-col gap-2">
+          {BLOCK_TYPES.map(bt => (
             <button
-              key={s.label}
-              onClick={() => setPageSize(s)}
-              className={`px-5 py-2 text-sm font-medium rounded-full border transition-all
-                ${pageSize.label === s.label 
-                  ? 'bg-[#185fa5]/20 border-[#185fa5] text-[#60a5fa]' 
-                  : 'border-[#2d3748] hover:border-[#3b4a66] text-[#e2e8f0]'
-                }`}
+              key={bt.type}
+              onClick={() => bt.type === "link" ? onShowLinkModal() : onAddBlock(bt.type)}
+              className="flex items-center gap-3 px-4 py-3 bg-transparent hover:bg-white/5 border border-[#2d3748] hover:border-[#3b4a66] rounded-xl text-[#e2e8f0] text-14px transition-all active:scale-[0.98] text-left"
             >
-              {s.label}
+              <span className="w-5 text-center font-bold text-base">{bt.icon}</span>
+              <span>{bt.label}</span>
             </button>
           ))}
         </div>
-        <p className="text-[10px] text-[#475569] mt-3 pl-1">A4 & Letter most ATS-safe</p>
-      </div>
-    )}
+      )}
 
-  </div>
-);
+      {sec("Font",
+        <div className="flex flex-col gap-2">
+          {FONTS.map(f => (
+            <button
+              key={f.name}
+              onClick={() => setFont(f)}
+              className={`flex items-center justify-between px-4 py-2 rounded-xl border transition-all text-14px
+              ${font.name === f.name
+                  ? 'bg-[#185fa5]/20 border-[#185fa5]  text-white'
+                  : 'bg-transparent border-[#2d3748] hover:bg-white/5 hover:border-[#3b4a66]  text-[#e2e8f0]'
+                }`}
+              style={{ fontFamily: f.val }}
+            >
+              <span>{f.name}</span>
+              <span className="text-14px px-2 py-1 bg-[#003f28] text-[#11ffa8] font-bold rounded-md tracking-wider">
+                {f.tag}
+              </span>
+            </button>
+          ))}
+        </div>
+      )}
+
+      {sec("Font Size",
+        <div className="space-y-5">
+          {[
+            ["Name", sizes.name, 18, 34, "name"],
+            ["Heading", sizes.heading, 10, 16, "heading"],
+            ["Body", sizes.body, 9, 13, "body"],
+          ].map(([lbl, val, mn, mx, key]) => (
+            <div key={key} className="flex items-center gap-4">
+              <span className="text-xs text-[#94a3b8] w-14 flex-shrink-0 font-medium">{lbl}</span>
+
+              <input
+                type="range"
+                min={mn}
+                max={mx}
+                value={val}
+                onChange={e => setSizes(s => ({ ...s, [key]: Number(e.target.value) }))}
+                className="flex-1 accent-[#185fa5]"
+              />
+
+              <span className="text-sm font-medium text-white w-8 text-right">{val}</span>
+            </div>
+          ))}
+          <p className="text-[10px] text-[#475569] pl-1">ATS recommended: Body 10–12pt</p>
+        </div>
+      )}
+
+      {sec("Accent Color",
+        <div>
+          <div className="flex flex-wrap gap-3 mb-4">
+            {ACCENT_COLORS.map(c => (
+              <div
+                key={c}
+                onClick={() => setAccentColor(c)}
+                className={`w-8 h-8 rounded-full cursor-pointer ring-2 ring-offset-2 ring-offset-[#1a1f2e] transition-all hover:scale-110
+                ${accentColor === c ? 'ring-[#e2e8f0] scale-110' : 'ring-transparent'}`}
+                style={{ backgroundColor: c }}
+              />
+            ))}
+          </div>
+
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-[#94a3b8]">Custom</span>
+            <input
+              type="color"
+              value={accentColor}
+              onChange={e => setAccentColor(e.target.value)}
+              className="w-9 h-8 bg-transparent border-0 p-0 cursor-pointer rounded"
+            />
+            <span className="text-xs font-mono text-[#64748b]">{accentColor}</span>
+          </div>
+        </div>
+      )}
+
+      {sec("Page Size",
+        <div>
+          <div className="flex gap-2 flex-wrap">
+            {PAGE_SIZES.map(s => (
+              <button
+                key={s.label}
+                onClick={() => setPageSize(s)}
+                className={`px-5 py-2 text-sm font-medium rounded-full border transition-all
+                ${pageSize.label === s.label
+                    ? 'bg-[#185fa5]/20 border-[#185fa5] text-[#60a5fa]'
+                    : 'border-[#2d3748] hover:border-[#3b4a66] text-[#e2e8f0]'
+                  }`}
+              >
+                {s.label}
+              </button>
+            ))}
+          </div>
+          <p className="text-[10px] text-[#475569] mt-3 pl-1">A4 & Letter most ATS-safe</p>
+        </div>
+      )}
+
+    </div>
+  );
 }
 
 
 // ── Root App ───────────────────────────────────────────
 export default function ATSResumeBuilder() {
-// ── Load saved resume from localStorage ──
-const loadSavedData = () => {
-  try {
-    const data = localStorage.getItem("resumeData");
-    return data ? JSON.parse(data) : null;
-  } catch {
-    return null;
-  }
-};
-
-const saved = loadSavedData();
-  // ── Load first template as starting point ──
-const { id } = useParams();
-
-const selectedTemplate = getTemplateById(id) || TEMPLATES[0];
-const firstTemplate = selectedTemplate;
-const firstFont     = FONTS.find(f => f.name === firstTemplate.fontName) ?? FONTS[0];
-
-// ── Give every block a fresh uid on first load ──────────
-const initBlocks = (tpl) => {
-  if (tpl.layout === "two-column") {
-    return {
-      blocks:      [],
-      leftBlocks:  tpl.leftBlocks.map(b => ({ ...b, id: uid() })),
-      rightBlocks: tpl.rightBlocks.map(b => ({ ...b, id: uid() })),
-    };
-  }
-  return {
-    blocks:      tpl.blocks.map(b => ({ ...b, id: uid() })),
-    leftBlocks:  [],
-    rightBlocks: [],
+  // ── Load saved resume from localStorage ──
+   const navigate = useNavigate();
+  const loadSavedData = () => {
+    try {
+      const data = localStorage.getItem("resumeData");
+      return data ? JSON.parse(data) : null;
+    } catch {
+      return null;
+    }
   };
-};
 
-const initial = initBlocks(firstTemplate);
 
-const [activeTemplateId, setActiveTemplateId] = useState(saved?.activeTemplateId || firstTemplate.id);
-const [layout, setLayout] = useState(saved?.layout || firstTemplate.layout || "single");
+  // ── Load first template as starting point ──
+  const { id } = useParams();
 
-const [blocks, setBlocks] = useState(saved?.blocks || initial.blocks);
-const [leftBlocks, setLeftBlocks] = useState(saved?.leftBlocks || initial.leftBlocks);
-const [rightBlocks, setRightBlocks] = useState(saved?.rightBlocks || initial.rightBlocks);
+  const selectedTemplate = getTemplateById(id) || TEMPLATES[0];
+  const firstTemplate = selectedTemplate;
+  const firstFont = FONTS.find(f => f.name === firstTemplate.fontName) ?? FONTS[0];
 
-const [selId, setSelId] = useState(null);
-const [font, setFont] = useState(saved?.font || firstFont);
-const [sizes, setSizes] = useState(saved?.sizes || { ...firstTemplate.sizes });
-const [accentColor, setAccentColor] = useState(saved?.accentColor || firstTemplate.accentColor);
-const [pageSize, setPageSize] = useState(saved?.pageSize || PAGE_SIZES[0]);
+  // ── Give every block a fresh uid on first load ──────────
+  const initBlocks = (tpl) => {
+    if (tpl.layout === "two-column") {
+      return {
+        blocks: [],
+        leftBlocks: tpl.leftBlocks.map(b => ({ ...b, id: uid() })),
+        rightBlocks: tpl.rightBlocks.map(b => ({ ...b, id: uid() })),
+      };
+    }
+    return {
+      blocks: tpl.blocks.map(b => ({ ...b, id: uid() })),
+      leftBlocks: [],
+      rightBlocks: [],
+    };
+  };
 
-const [showLink, setShowLink] = useState(false);
-const [showGallery, setShowGallery] = useState(false);
-const [exporting, setExporting] = useState(false);
+  const initial = initBlocks(firstTemplate);
+  const saved = id ? null : loadSavedData();
+  const [activeTemplateId, setActiveTemplateId] = useState(saved?.activeTemplateId || firstTemplate.id);
+  const [layout, setLayout] = useState(saved?.layout || firstTemplate.layout || "single");
 
-useEffect(() => {
-  const data = {
+  const [blocks, setBlocks] = useState(saved?.blocks || initial.blocks);
+  const [leftBlocks, setLeftBlocks] = useState(saved?.leftBlocks || initial.leftBlocks);
+  const [rightBlocks, setRightBlocks] = useState(saved?.rightBlocks || initial.rightBlocks);
+
+  const [selId, setSelId] = useState(null);
+  const [font, setFont] = useState(saved?.font || firstFont);
+  const [sizes, setSizes] = useState(saved?.sizes || { ...firstTemplate.sizes });
+  const [accentColor, setAccentColor] = useState(saved?.accentColor || firstTemplate.accentColor);
+  const [pageSize, setPageSize] = useState(saved?.pageSize || PAGE_SIZES[0]);
+
+  const [showLink, setShowLink] = useState(false);
+  const [showGallery, setShowGallery] = useState(false);
+  const [exporting, setExporting] = useState(false);
+
+  useEffect(() => {
+    const data = {
+      activeTemplateId,
+      layout,
+      blocks,
+      leftBlocks,
+      rightBlocks,
+      font,
+      sizes,
+      accentColor,
+      pageSize,
+    };
+
+    localStorage.setItem("resumeData", JSON.stringify(data));
+  }, [
     activeTemplateId,
     layout,
     blocks,
@@ -296,21 +312,8 @@ useEffect(() => {
     font,
     sizes,
     accentColor,
-    pageSize,
-  };
-
-  localStorage.setItem("resumeData", JSON.stringify(data));
-}, [
-  activeTemplateId,
-  layout,
-  blocks,
-  leftBlocks,
-  rightBlocks,
-  font,
-  sizes,
-  accentColor,
-  pageSize
-]);
+    pageSize
+  ]);
   const paperRef = useRef(null);
 
   // ── Apply a template ───────────────────────
@@ -351,14 +354,14 @@ useEffect(() => {
 
   // ── Block operations (work for all layouts) ─
   const updateText = useCallback((id, text) => {
-    setBlocks(bs      => bs.map(b => b.id === id ? { ...b, text } : b));
-    setLeftBlocks(bs  => bs.map(b => b.id === id ? { ...b, text } : b));
+    setBlocks(bs => bs.map(b => b.id === id ? { ...b, text } : b));
+    setLeftBlocks(bs => bs.map(b => b.id === id ? { ...b, text } : b));
     setRightBlocks(bs => bs.map(b => b.id === id ? { ...b, text } : b));
   }, []);
 
   const deleteBlock = useCallback((id) => {
-    setBlocks(bs      => bs.filter(b => b.id !== id));
-    setLeftBlocks(bs  => bs.filter(b => b.id !== id));
+    setBlocks(bs => bs.filter(b => b.id !== id));
+    setLeftBlocks(bs => bs.filter(b => b.id !== id));
     setRightBlocks(bs => bs.filter(b => b.id !== id));
     setSelId(null);
   }, []);
@@ -367,7 +370,7 @@ useEffect(() => {
     const move = bs => {
       const i = bs.findIndex(b => b.id === id);
       if (i <= 0) return bs;
-      const n = [...bs]; [n[i - 1], n[i]] = [n[i], n[i - 1]]; return n;
+      const n = [...bs];[n[i - 1], n[i]] = [n[i], n[i - 1]]; return n;
     };
     setBlocks(move); setLeftBlocks(move); setRightBlocks(move);
   }, []);
@@ -376,7 +379,7 @@ useEffect(() => {
     const move = bs => {
       const i = bs.findIndex(b => b.id === id);
       if (i === -1 || i >= bs.length - 1) return bs;
-      const n = [...bs]; [n[i], n[i + 1]] = [n[i + 1], n[i]]; return n;
+      const n = [...bs];[n[i], n[i + 1]] = [n[i + 1], n[i]]; return n;
     };
     setBlocks(move); setLeftBlocks(move); setRightBlocks(move);
   }, []);
@@ -445,10 +448,10 @@ useEffect(() => {
   // ── Shared props passed to both renderers ──
   const rendererProps = {
     selId, font, sizes, accentColor,
-    onSelect:   setSelId,
-    onChange:   updateText,
-    onDelete:   deleteBlock,
-    onMoveUp:   moveUp,
+    onSelect: setSelId,
+    onChange: updateText,
+    onDelete: deleteBlock,
+    onMoveUp: moveUp,
     onMoveDown: moveDown,
     BlockComponent: Block,   // pass Block down so renderers don't import it separately
   };
@@ -462,10 +465,10 @@ useEffect(() => {
 
       {/* Left Panel */}
       <LeftPanel
-        font={font}               setFont={setFont}
-        sizes={sizes}             setSizes={setSizes}
+        font={font} setFont={setFont}
+        sizes={sizes} setSizes={setSizes}
         accentColor={accentColor} setAccentColor={setAccentColor}
-        pageSize={pageSize}       setPageSize={setPageSize}
+        pageSize={pageSize} setPageSize={setPageSize}
         onAddBlock={addBlock}
         onShowLinkModal={() => setShowLink(true)}
         onShowGallery={() => setShowGallery(true)}
@@ -487,26 +490,38 @@ useEffect(() => {
             } · {pageSize.label} · {font.name}
           </span>
           <div style={{ flex: 1 }} />
-
+            <button
+               onClick={() => navigate('/')}
+            disabled={exporting}
+            style={{
+              padding: "6px 16px",
+              background: exporting ? "#334155" : "#185fa5",
+              border: "none", borderRadius: 6, color: "#e2e8f0",
+              fontSize: 12, fontWeight: 700,
+              cursor: exporting ? "not-allowed" : "pointer",
+              minWidth: 130,
+            }}>
+          Home
+          </button>
           {/* Download PDF button */}
           <button
-  onClick={() => {
-    localStorage.removeItem("resumeData");
-    window.location.reload();
-  }}
-  style={{
-    padding: "6px 12px",
-    background: "#ef4444",
-    color: "#fff",
-    border: "none",
-    borderRadius: 6,
-    cursor: "pointer",
-    fontSize: 12,
-    fontWeight: 700
-  }}
->
-  Reset
-</button>
+            onClick={() => {
+              localStorage.removeItem("resumeData");
+              window.location.reload();
+            }}
+            style={{
+              padding: "6px 12px",
+              background: "#ef4444",
+              color: "#fff",
+              border: "none",
+              borderRadius: 6,
+              cursor: "pointer",
+              fontSize: 12,
+              fontWeight: 700
+            }}
+          >
+            Reset
+          </button>
           <button
             onClick={async () => {
               setExporting(true);
@@ -539,14 +554,14 @@ useEffect(() => {
             ref={paperRef}
             onClick={e => { if (e.target === e.currentTarget) setSelId(null); }}
             style={{
-              width:      pageSize.width + "px",
-              minWidth:   pageSize.width + "px",
-              minHeight:  pageSize.width * 1.41 + "px",
+              width: pageSize.width + "px",
+              minWidth: pageSize.width + "px",
+              minHeight: pageSize.width * 1.41 + "px",
               background: "#fff",
-              padding:    "48px 56px",
-              boxShadow:  "0 6px 32px rgba(0,0,0,0.4)",
+              padding: "48px 56px",
+              boxShadow: "0 6px 32px rgba(0,0,0,0.4)",
               borderRadius: 2,
-              boxSizing:  "border-box",
+              boxSizing: "border-box",
             }}
           >
             {layout === "two-column" ? (
@@ -573,13 +588,7 @@ useEffect(() => {
         />
       )}
 
-      {showGallery && (
-        <TemplateGallery
-          currentId={activeTemplateId}
-          onSelect={applyTemplate}
-          onClose={() => setShowGallery(false)}
-        />
-      )}
+
 
       <style>{`@media print { body > * { display:none!important; } }`}</style>
     </div>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Menu, X, Sparkles } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "./features/auth/hooks/useAuth";
-
+import logo from "./assets/znj4N-removebg-preview.png"
 export default function Nav() {
   const [open, setOpen] = useState(false);
   const { user, isAuthenticated, handleLogout } = useAuth();
@@ -30,14 +30,12 @@ export default function Nav() {
       <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
 
         {/* Logo */}
-        <div className="flex items-center gap-3 group cursor-pointer">
-          <div className="w-9 h-9 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center">
-            <Sparkles className="w-5 h-5 text-white" />
+     
+          <div className="w-15 h-15 bg-gradient-to-br  rounded-2xl flex items-center justify-center">
+            <img src={logo} className="" />
           </div>
-          <h1 className="text-2xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-white to-purple-200">
-            Brand
-          </h1>
-        </div>
+          
+   
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-10">
@@ -60,7 +58,7 @@ export default function Nav() {
         <div className="hidden md:flex items-center gap-4">
           {isAuthenticated ? (
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-3 bg-white/5 border border-white/20 px-4 py-2 rounded-2xl">
+              <div className="flex items-center gap-3 bg-white/15 border border-white/20 px-4 py-2 rounded-2xl">
                 <div>
                   <p className="text-sm font-medium text-white">{user?.username}</p>
                   <p className="text-xs text-gray-500">Welcome</p>
@@ -68,7 +66,7 @@ export default function Nav() {
               </div>
               <button
                 onClick={handleLogout}
-                className="px-4 py-4 text-sm text-white font-medium border bg-white/5 border-white/20 hover:border-red-500/50 hover:text-red-400 rounded-2xl transition-all duration-300"
+                className="px-4 py-4 text-sm text-white font-medium border bg-white/15 border-white/20 hover:border-red-500/50 hover:text-red-400 rounded-2xl transition-all duration-300"
               >
                 Logout
               </button>

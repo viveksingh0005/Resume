@@ -43,7 +43,7 @@ export default function TemplatesPage() {
 function TemplateCard({ tpl, navigate }) {
   return (
     <div
-      onClick={() => navigate(`/template/${tpl.id}`)}
+      onClick={() => navigate(`/resume/${tpl.id}`)}
       style={{
         background: "#1e293b",
         borderRadius: 12,

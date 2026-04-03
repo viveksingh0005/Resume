@@ -5,9 +5,13 @@ import { Sparkles, ArrowRight, Shield, Zap, MapPin, Users,Calendar,Award,Star } 
 import { motion } from "framer-motion";
 import Footer from './webpages/Footer';
 import FeedbackModal from './webpages/FeedbackModal';
+import FeedbackSectionpost from './webpages/FeedbackSectionpost';
 import Contact from './webpages/Contact';
 import About from './webpages/About';
 import Service from './webpages/Service';
+import linkedin from  './assets/145807.png'
+import github from  './assets/githubv.png'
+import FeedbackSectionGet from './webpages/FeedbackSectionGet';
 export const Home = () => {
   const [showModal, setShowModal] = useState(false);
 const navigate = useNavigate();
@@ -19,9 +23,9 @@ const navigate = useNavigate();
 
         {/* Animated Background Elements */}
         <div className="absolute inset-0">
-          <div className="absolute top-20 left-20 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-32 right-16 w-[500px] h-[500px] bg-pink-500/20 rounded-full blur-3xl animate-pulse delay-700"></div>
-          <div className="absolute top-1/2 left-1/3 w-72 h-72 bg-violet-500/10 rounded-full blur-3xl"></div>
+          <div className="absolute top-20 left-20 w-96 h-96 bg-purple-500/30 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-32 right-16 w-125 h-125 bg-pink-500/30 rounded-full blur-3xl animate-pulse delay-700"></div>
+          <div className="absolute top-1/2 left-1/3 w-72 h-72 bg-violet-500/50 rounded-full blur-3xl"></div>
         </div>
 
         <div className="max-w-7xl mx-auto px-6 pt-24 pb-20 relative z-10">
@@ -136,8 +140,8 @@ const navigate = useNavigate();
               </motion.div>
 
               <div className="space-y-1 pt-2">
-                <h3 className="text-3xl font-bold tracking-tight">Rahul Sharma</h3>
-                <p className="text-purple-300 text-xl font-medium">Senior Product Designer</p>
+                <h3 className="text-3xl font-bold tracking-tight">Vivek Singh</h3>
+                <p className="text-purple-300 text-xl font-medium">Web Developer</p>
                 
                 <div className="flex items-center gap-4 text-sm text-gray-400 mt-3">
                   <div className="flex items-center gap-1.5">
@@ -146,7 +150,7 @@ const navigate = useNavigate();
                   </div>
                   <div className="flex items-center gap-1.5">
                     <Calendar className="w-4 h-4" />
-                    4+ years exp
+                    1 year exp
                   </div>
                 </div>
               </div>
@@ -173,34 +177,78 @@ const navigate = useNavigate();
                 >
                   <div className="flex justify-between items-start">
                     <div>
-                      <div className="font-semibold text-lg leading-tight">Product Designer</div>
-                      <div className="text-purple-600 font-medium">Google • India</div>
+                      <div className="font-semibold text-lg leading-tight">Full stack developer</div>
+                      <div className="text-purple-600 font-medium">Independent • India</div>
                     </div>
                     <div className="text-right text-sm text-gray-500">2023 — Present</div>
                   </div>
                   <p className="text-gray-600 text-sm mt-2 leading-relaxed">
-                    Leading design system for Search &amp; AI products. Increased user engagement by 43%.
+                    Creating websites not only for scaling it but also also for scaling skills
                   </p>
                 </motion.div>
 
                 {/* Experience 2 */}
-                <motion.div 
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.6 }}
-                  className="group"
-                >
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <div className="font-semibold text-lg leading-tight">UI/UX Designer</div>
-                      <div className="text-purple-600 font-medium">Flipkart</div>
-                    </div>
-                    <div className="text-right text-sm text-gray-500">2021 — 2023</div>
-                  </div>
-                  <p className="text-gray-600 text-sm mt-2 leading-relaxed">
-                    Redesigned checkout flow resulting in 28% higher conversion rate.
-                  </p>
-                </motion.div>
+               {/* Social Links Section - LinkedIn & GitHub */}
+<motion.div
+  initial={{ opacity: 0, x: -20 }}
+  animate={{ opacity: 1, x: 0 }}
+  transition={{ delay: 0.6 }}
+  className="pt-6 border-t border-gray-100"
+>
+  <div className="uppercase text-xs tracking-[2px] font-semibold text-gray-500 mb-5 flex items-center gap-2">
+    <span>CONNECT WITH ME</span>
+    <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
+  </div>
+
+  <div className="grid grid-cols-2 gap-4">
+    
+    {/* LinkedIn Link */}
+    <motion.a
+      href="https://www.linkedin.com/in/vivek-bora0005"   // ← Change this to real link
+      target="_blank"
+      rel="noopener noreferrer"
+      whileHover={{ scale: 1.03, y: -2 }}
+      whileTap={{ scale: 0.98 }}
+      className="group flex items-center gap-4 bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-300 p-5 rounded-2xl transition-all duration-300"
+    >
+      <img src={linkedin} className="w-11 h-11 bg-[#0A66C2] text-white rounded-xl flex items-center justify-center text-2xl flex-shrink-0"/>
+    
+      <div>
+        <div className="font-semibold text-gray-900 group-hover:text-blue-700 transition-colors">
+          LinkedIn
+        </div>
+        
+      </div>
+      <div className="ml-auto text-blue-500 opacity-0 group-hover:opacity-100 transition-all">
+        ↗
+      </div>
+    </motion.a>
+
+    {/* GitHub Link */}
+    <motion.a
+      href="https://github.com/viveksingh0005"        // ← Change this to real link
+      target="_blank"
+      rel="noopener noreferrer"
+      whileHover={{ scale: 1.03, y: -2 }}
+      whileTap={{ scale: 0.98 }}
+      className="group flex items-center gap-4 bg-gray-50 hover:bg-gray-900 border border-gray-200 hover:border-gray-700 p-5 rounded-2xl transition-all duration-300"
+    >
+      <div className="w-11 h-11 bg-black text-white rounded-xl flex items-center justify-center text-2xl flex-shrink-0">
+       <img src={github} className="w-11 h-11 bg-[#0A66C2] text-white rounded-xl flex items-center justify-center text-2xl flex-shrink-0"/>
+      </div>
+      <div>
+        <div className="font-semibold text-gray-900 group-hover:text-white transition-colors">
+          GitHub
+        </div>
+    
+      </div>
+      <div className="ml-auto text-gray-400 group-hover:text-white opacity-0 group-hover:opacity-100 transition-all">
+        ↗
+      </div>
+    </motion.a>
+
+  </div>
+</motion.div>
               </div>
             </div>
 
@@ -212,7 +260,7 @@ const navigate = useNavigate();
               </div>
               
               <div className="flex flex-wrap gap-2">
-                {["Figma", "Framer", "Design Systems", "User Research", "Prototyping", "AI Tools"].map((skill, i) => (
+                {["Mern stack", "Laravel", "gen-ai", "docker", "kubernetes","CI/CD", "AI Tools"].map((skill, i) => (
                   <motion.span
                     key={i}
                     initial={{ opacity: 0, scale: 0.8 }}
@@ -245,7 +293,7 @@ const navigate = useNavigate();
         </motion.div>
 
         {/* Floating Elements */}
-       
+      
 
         <motion.div 
           initial={{ opacity: 0, scale: 0.8 }}
@@ -281,6 +329,8 @@ const navigate = useNavigate();
       <section id="contact">
         <Contact />
       </section>
+      <FeedbackSectionpost/>
+      <FeedbackSectionGet/>
       <Footer />
     </>
   )
