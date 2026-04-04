@@ -31,7 +31,7 @@ const FeedbackModal = ({ isOpen, onClose }) => {
                 return;
             }
             await axios.post(
-                'http://localhost:3000/api/feedback/submit',
+                `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/api/feedback/submit`,
                 { rating, comment },
                 {
                     headers: {

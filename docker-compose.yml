@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./server
+    container_name: backend
+    ports:
+      - "5000:3000"
+    env_file:
+      - ./server/.env        # ← reads your .env file
+    restart: always
+
+  frontend:
+    build: ./client
+    container_name: frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: always

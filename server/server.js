@@ -1,19 +1,15 @@
 require("dotenv").config()
-const app=require("./src/app")
+const app = require("./src/app")
 const connectToDB = require("./src/config/database")
-app.listen(3000,()=>{
-    console.log("server is running on port 3000")
-})
 
-const startServer=async()=>{
-    try{
+const startServer = async () => {
+    try {
         await connectToDB();
-        app.listen(3000,()=>{
-    console.log("server is running on port 3000")
-})
-
+        app.listen(process.env.PORT || 3000, () => {
+            console.log(`server is running on port ${process.env.PORT || 3000}`)
+        })
     }
-    catch(err){
+    catch(err) {
         console.log(err);
     }
 }
