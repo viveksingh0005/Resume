@@ -13,7 +13,8 @@ const FeedbackSectionGet = () => {
     const fetchFeedbacks = async () => {
       try {
         setLoading(true);
-        const res = await axios.get('http://localhost:3000/api/feedback/');
+        // const res = await axios.get('http://localhost:3000/api/feedback/');
+        const res = await axios.get('`${import.meta.env.VITE_API_URL}/api/feedback/');
 
         // Extract the feedbacks array from your controller response
         const feedbacksArray = res.data.feedbacks || res.data.data || [];

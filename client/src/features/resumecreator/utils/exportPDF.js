@@ -25,7 +25,7 @@ export const exportToPDF = async (paperRef, filename = "my-resume.pdf") => {
 
   try {
     // in exportPDF.js or wherever you make the call
-const response = await fetch("http://localhost:3000/api/resumes/generate-pdf", {
+const response = await fetch(`${import.meta.env.VITE_API_URL}/api/resumes/generate-pdf`, {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
@@ -48,6 +48,6 @@ const response = await fetch("http://localhost:3000/api/resumes/generate-pdf", {
     URL.revokeObjectURL(url);
   } catch (err) {
     console.log(err);
-    alert("❌ PDF failed. Make sure backend is running on http://localhost:3000");
+    alert("❌ PDF failed. Make sure backend is running on `${import.meta.env.VITE_API_URL}`");
   }
 };

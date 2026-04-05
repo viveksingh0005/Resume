@@ -29,7 +29,8 @@ const FeedbackSectionpost = () => {
             }
 
             await axios.post(
-                'http://localhost:3000/api/feedback/submit',
+                // 'http://localhost:3000/api/feedback/submit',
+                `${import.meta.env.VITE_API_URL}/api/feedback/submit`,
                 { rating, comment },
                 {
                     headers: { Authorization: `Bearer ${token}` },
